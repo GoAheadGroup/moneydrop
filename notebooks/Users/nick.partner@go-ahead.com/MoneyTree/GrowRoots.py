@@ -83,7 +83,7 @@ money = money.withColumn("RetailMethod",retailDerivation_udf(money["Method"],mon
              .drop("price") \
              .withColumnRenamed("PriceNew","Price")
 #money = money.printSchema()
-money.show(10)
+#money.show(10)
 
 # COMMAND ----------
 
@@ -149,7 +149,8 @@ time = money.select("IssuedAt") \
              .withColumn("month",month(money['IssuedAt'])) \
              .withColumn("hour",hour(money['IssuedAt'])) \
              .withColumn("minute",minute(money['IssuedAt'])) \
-             .withColumn("datofweek",date_format(money['IssuedAt'],'EEEE')) \
+             .withColumn("dayofweek",date_format(money['IssuedAt'],'EEEE')) \
+             .withColumn("weekofyear",weekofyear(money['IssuedAt'])) \
              .withColumn("time_id",concat(col("year"), col("month"), col("day"),col("hour"),col("minute"))) \
              .drop('IssuedAt') \
              .distinct()
@@ -179,12 +180,12 @@ money = money \
 
 # COMMAND ----------
 
-# MAGIC %md <h4> Upload Fact and Dimensions </h4>
+# MAGIC %md <h6>Upload Fact and Dimensions </h6>
 
 # COMMAND ----------
 
 #money.printSchema()
-time.printSchema()
+#time.printSchema()
 
-#money.write.saveAsTable("fact_journey")
+money.write.saveAsTable("fact_journey")
 time.write.saveAsTable("dim_time")
